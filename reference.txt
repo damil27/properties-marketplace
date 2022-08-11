@@ -1,1 +1,10 @@
+fire base Auth
 https://firebase.google.com/docs/firestore/manage-data/add-data
+
+
+sign-in with firebase
+https://firebase.google.com/docs/auth/web/start
+
+283826
+
+8b8f9cb765b2378c566b1b78308c4999   mailpoet

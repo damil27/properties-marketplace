@@ -4,11 +4,14 @@ import {
   createUserWithEmailAndPassword,
   updateProfile,
 } from "firebase/auth";
+import { setDoc, doc, serverTimestamp } from "firebase/firestore";
 import { db } from "../firebase.config";
+import { toast } from "react-toastify";
+
 import { Link, useNavigate } from "react-router-dom";
 import { ReactComponent as ArrowRightIcon } from "../assets/svg/keyboardArrowRightIcon.svg";
 import visibilityIcon from "../assets/svg/visibilityIcon.svg";
-import { async } from "@firebase/util";
+import OAuth from "../components/OAuth";
 
 function SignUp(props) {
   const [showPassword, setShowPassword] = useState(false);
@@ -42,9 +45,15 @@ function SignUp(props) {
       updateProfile(auth.currentUser, {
         displayName: name,
       });
+
+      const formDataCopy = { ...formData };
+      delete formDataCopy.password;
+      formDataCopy.timestamp = serverTimestamp();
+      await setDoc(doc(db, "users", user.uid), formDataCopy);
+
       navigate("/");
     } catch (error) {
-      console.log(error);
+      toast.error("Incorrect credentials");
     }
   };
   return (
@@ -96,7 +105,7 @@ function SignUp(props) {
             </button>
           </div>
         </form>
-        {/* Google OAuth */}
+        <OAuth />
         <Link to="/sign-in" className="registerLink">
           Sign In Instead
         </Link>
