@@ -15,7 +15,7 @@ import { useParams } from "react-router-dom";
 function Category(props) {
   const [listings, setListings] = useState(null);
   const [loading, setLoading] = useState(true);
-  const params = useParams;
+  const params = useParams();
 
   useEffect(() => {
     const fetchListings = async () => {
@@ -37,15 +37,20 @@ function Category(props) {
         const listings = [];
 
         querySnap.forEach((doc) => {
-          console.log(doc);
+          return listings.push({
+            id: doc.id,
+            data: doc.data(),
+          });
         });
+        setListings(listings);
+        setLoading(false);
       } catch (error) {
         toast.error("Could not fetch listings");
       }
     };
 
     fetchListings();
-  }, []);
+  }, [params.categoryName]);
   return (
     <div className="category">
       <header>
@@ -57,7 +62,23 @@ function Category(props) {
       </header>
 
       <>
-        <main>main body</main>
+        <main>
+          {loading ? (
+            <h2>Loading</h2>
+          ) : listings && listings.length > 0 ? (
+            <>
+              <main>
+                <ul className="categoryListings">
+                  {listings.map((listing) => (
+                    <h3 key={listing.id}>{listing.data.name}</h3>
+                  ))}
+                </ul>
+              </main>
+            </>
+          ) : (
+            <p>There is no Listings {params.categoryName}</p>
+          )}
+        </main>
       </>
     </div>
   );
