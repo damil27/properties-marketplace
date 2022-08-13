@@ -14,7 +14,20 @@ function Explore(props) {
         <p className="exploreCategoryHeading">Categories</p>
         <div className="exploreCategories">
           <Link to="/category/rent">
-            <img src={rentCategoryImage} alt="rent" />
+            <img
+              src={rentCategoryImage}
+              alt="rent"
+              className="exploreCategoryImg"
+            />
+            <p className="exploreCategoryName">Places for Rent</p>
+          </Link>
+          <Link to="/category/sale">
+            <img
+              src={sellCategoryImage}
+              alt="sell"
+              className="exploreCategoryImg"
+            />
+            <p className="exploreCategoryName">Places for Sell</p>
           </Link>
         </div>
       </main>
