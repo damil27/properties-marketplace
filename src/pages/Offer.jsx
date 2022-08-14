@@ -27,7 +27,7 @@ function Offer(props) {
         // Create a query
         const q = query(
           listingsRef,
-          where("parking", "==", true),
+          where("offer", "==", true),
           orderBy("timestamp", "desc"),
           limit(10)
         );
