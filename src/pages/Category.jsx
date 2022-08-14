@@ -11,6 +11,7 @@ import {
 import { db } from "../firebase.config";
 import { toast } from "react-toastify";
 import { useParams } from "react-router-dom";
+import ListingItems from "./../components/listingItems";
 
 function Category(props) {
   const [listings, setListings] = useState(null);
@@ -70,7 +71,11 @@ function Category(props) {
               <main>
                 <ul className="categoryListings">
                   {listings.map((listing) => (
-                    <h3 key={listing.id}>{listing.data.name}</h3>
+                    <ListingItems
+                      key={listing.id}
+                      listing={listing.data}
+                      id={listing.id}
+                    />
                   ))}
                 </ul>
               </main>
