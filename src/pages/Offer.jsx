@@ -16,7 +16,6 @@ import ListingItems from "./../components/listingItems";
 function Offer(props) {
   const [listings, setListings] = useState(null);
   const [loading, setLoading] = useState(true);
-  const params = useParams();
 
   useEffect(() => {
     const fetchListings = async () => {
@@ -43,6 +42,7 @@ function Offer(props) {
             data: doc.data(),
           });
         });
+        console.log(listings);
         setListings(listings);
         setLoading(false);
       } catch (error) {
@@ -51,11 +51,11 @@ function Offer(props) {
     };
 
     fetchListings();
-  });
+  }, []);
   return (
     <div className="category">
       <header>
-        <p className="pageHeader">Offer</p>
+        <p className="pageHeader">Offers</p>
       </header>
 
       <>
