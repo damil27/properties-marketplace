@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import { addDoc, collection, serverTimestamp } from "firebase/firestore";
 import {
   getStorage,
   ref,
@@ -69,10 +70,10 @@ function CreateListings(props) {
       toast.error("Discounted price needs to be less than regular price");
       return;
     }
-    if (images.length > 6) {
-      setLoading(false);
-      toast.error(" Max 6 Images are allow");
-    }
+    // if (images.length > 6) {
+    //   setLoading(false);
+    //   toast.error(" Max 6 Images are allow");
+    // }
 
     // Geolocation
     let geolocation = {};
@@ -95,7 +96,7 @@ function CreateListings(props) {
     } else {
       geolocation.lat = latitude;
       geolocation.lng = longitude;
-      location = address;
+
       console.log(geolocation, location);
     }
     // store image in  firebase
@@ -124,6 +125,7 @@ function CreateListings(props) {
           (error) => {
             // Handle unsuccessful uploads
             reject(error);
+            console.log(error);
           },
           () => {
             // Handle successful uploads on complete
@@ -143,8 +145,21 @@ function CreateListings(props) {
       toast.error("Images not uploaded");
       return;
     });
-    console.log(imgUrls);
+    const formDataCopy = {
+      ...formData,
+      imgUrls,
+      geolocation,
+      timestamp: serverTimestamp(),
+    };
+    formDataCopy.location = address;
+    delete formDataCopy.images;
+    delete formDataCopy.address;
+    location && (formDataCopy.location = location);
+    !formDataCopy.offer && delete formDataCopy.discountPrice;
+    const docRef = await addDoc(collection(db, "listings"), formDataCopy);
     setLoading(false);
+    toast.success("Listings Saved");
+    navigate(`/category/${formDataCopy.type}/${docRef.id}`);
   };
   const onMutate = (e) => {
     let booleen = null;
@@ -155,10 +170,10 @@ function CreateListings(props) {
       booleen = true;
     }
     // files
-    if (e.target.filee) {
+    if (e.target.files) {
       setFormData((prevState) => ({
         ...prevState,
-        images: e.target.file,
+        images: e.target.files,
       }));
     }
 
